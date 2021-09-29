@@ -10,7 +10,12 @@ line : definition
      | declaration
      
 
-definition : new_variable "=" expression
+definition : variable_defn
+           | function_defn
+           
+variable_defn : new_variable "=" expression
+function_defn : new_variable new_variable "=" expression
+
 new_variable : STRING
 
 expression : value         | "(" value ")"
