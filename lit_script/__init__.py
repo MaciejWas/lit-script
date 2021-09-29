@@ -10,5 +10,5 @@ class Interpreter:
         return Lark(grammar, start="all")
 
     def read(self, line: str):
-        tree = self.parser(line)
+        tree = self.parser.parse(line)
         print(tree.pretty())
