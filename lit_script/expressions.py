@@ -5,17 +5,25 @@ from dataclasses import dataclass
 class Function:
     def __init__(
         self,
-        argument: "Variable",
-        expression: "Expression",
-        override: Optional[Callable[["Atom"], "Atom"]] = None
+        argument: Optional["Variable"] = None,
+        expression: Optional["Expression"] = None,
+        python_fn: Optional[Callable[["Atom"], "Atom"]] = None
     ):
         self.argument = argument
         self.expression = expression
-        self.override = override
+        self.python_fn = python_fn
+
+    @classmethod
+    def from_python_fn(cls, func: Callable[["Atom"], "Atom"]):
+        return cls(python_fn=func)
+
+    @classmethod
+    def from_expression(cls, expr: "Expression", arg: "Variable"):
+        return cls(argument=arg, expression=expr)
             
     def __call__(self, a: "Atom") -> "Atom":
-        if self.override:
-            return self.override(a)
+        if self.python_fn:
+            return self.python_fn(a)
         else:
             raise NotImplementedError()
 
@@ -24,9 +32,13 @@ class Atom:
     value: Union[int, float, str, Function]
     type: str
 
+    @property
+    def is_function(self):
+        return isinstance(self.value, Function)
+
     def __call__(self, *args, **kwargs):
         if not isinstance(self.value, Function):
-            raise Exception(f"You were trying to call {self.type}, which obviously failed.")
+            raise Exception(f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}")
         else:
             return self.value(*args, **kwargs)
 
