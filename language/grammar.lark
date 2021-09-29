@@ -1,0 +1,30 @@
+%import common.WS
+%import common.ESCAPED_STRING
+%import common.SIGNED_NUMBER -> NUMBER
+%ignore WS
+
+STRING : /[a-zA-Z_][a-zA-Z0-9_']*/
+
+all : line*
+line : definition "\n"
+     | declaration "\n"
+     
+
+definition : new_variable "=" expression
+new_variable : STRING
+
+expression : value         | "(" value ")"
+           | variable      | "(" variable ")"
+           | function_call | "(" function_call ")"
+
+value : ESCAPED_STRING 
+      | NUMBER
+
+variable : STRING
+
+function_call : function function_arg
+function : variable
+function_arg : expression 
+
+declaration : new_variable "::" type
+type : variable
