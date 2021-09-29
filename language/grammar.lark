@@ -5,9 +5,9 @@
 
 STRING : /[a-zA-Z_][a-zA-Z0-9_']*/
 
-all : line*
-line : definition "\n"
-     | declaration "\n"
+all : (line "\n")* line 
+line : definition
+     | declaration
      
 
 definition : new_variable "=" expression
@@ -23,7 +23,7 @@ value : ESCAPED_STRING
 variable : STRING
 
 function_call : function function_arg
-function : variable
+function : expression // variable
 function_arg : expression 
 
 declaration : new_variable "::" type
