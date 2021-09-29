@@ -16,15 +16,18 @@ new_variable : STRING
 expression : value         | "(" value ")"
            | variable      | "(" variable ")"
            | function_call | "(" function_call ")"
+           | chain         | "(" chain ")"
 
 value : ESCAPED_STRING 
       | NUMBER
 
 variable : STRING
 
-function_call : function function_arg
+function_call : function function_arg ["$"]
 function : expression // variable
 function_arg : expression 
 
 declaration : new_variable "::" type
 type : variable
+
+chain : "{" expression ( "->" expression )+ "}"
