@@ -1,5 +1,3 @@
-# TODO: do not use unittest for functional tests
-
 import os, sys
 
 sys.path.append('.')
@@ -15,8 +13,7 @@ for name, fn in ex.inbuilt_functions.items():
 
 TESTS_LOCATION = "language/tests"
 
-
-# TODO: outsorce heleprs below
+# Helpers
 
 def make_atom(value: int):
     return ex.Atom(value=value, type="Int")
