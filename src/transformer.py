@@ -73,11 +73,13 @@ class ExpressionTransformer(Transformer):
         fun, arg = exprs
         return FunctionCall(fun, arg)
 
-    def function(self, expr: Expression):
-        return expr
+    def function(self, exprs: list[Expression]):
+        assert len(exprs) == 1
+        return exprs[0]
 
-    def function_arg(self, expr: Expression):
-        return expr
+    def function_arg(self, exprs: list[Expression]):
+        assert len(exprs) == 1
+        return exprs[0]
 
 
 class TypeTransformer(Transformer):
@@ -107,7 +109,7 @@ class FinalTransformer(Transformer):
 
     def function_defn(self, xs):
         new_variable: Variable = xs[0]
-        expr: Expression = xs[1]
+        expr: Expression = xs[-1]
         return Definition(
             is_function=True,
             var=new_variable,
