@@ -67,7 +67,7 @@ class Atom:
 
     def __add__(self, other: "Atom") -> "Atom":
         if self.type != other.type:
-            return False
+            raise NotImplementedError("Cant add that m8.")
 
         elif self.type in ["Int", "Float"]:
             assert isinstance(self.value, (float, int))
@@ -169,6 +169,9 @@ class VariableExpression(Expression):
         self.variable = variable
 
     def resolve(self) -> Atom:
+        if self.context is None:
+            raise Exception("No context - can't resolve.")
+            
         behind_variable: Expression = self.context.lookup_variable(self.variable)
         return behind_variable.resolve()
 
