@@ -14,8 +14,8 @@ class Function:
         self.python_fn = python_fn
 
     @classmethod
-    def from_python_fn(cls, func: Callable[["Atom"], "Atom"]):
-        return cls(python_fn=func)
+    def from_python_fn(cls, fn: Callable[["Atom"], "Atom"]):
+        return cls(python_fn=fn)
 
     @classmethod
     def from_expression(cls, expr: "Expression", arg: "Variable"):
@@ -41,6 +41,16 @@ class Atom:
             raise Exception(f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}")
         else:
             return self.value(*args, **kwargs)
+
+    def __add__(self, other: "Atom") -> "Atom":
+        if self.type == other.type:
+            if self.type in ["Int", "Float"]:
+                assert isinstance(self.value, float)
+                assert isinstance(other.value, float)
+                return Atom(value=self.value + other.value, type=self.type) # mypy: 
+        else:
+            raise NotImplementedError("Cant add that m8.")
+
 
     def __eq__(self, other: Any):
         if isinstance(other, Atom):
@@ -124,3 +134,6 @@ class FunctionCallExpression(Expression):
         actual_arg: Atom = self.fncall.arg.resolve()
 
         return actual_function(actual_arg)
+
+class ChainExpression(Expression):
+    pass # TODO: IMPL
