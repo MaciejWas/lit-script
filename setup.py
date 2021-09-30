@@ -23,7 +23,7 @@ setup(
     author_email="wasilewski.maciej20@gmail.com",
 
     description="Compiler for my cool & useless language",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests',)),
 
