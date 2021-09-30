@@ -36,6 +36,10 @@ def raw_increase(a: Atom) -> Atom:
 
 increase = Function.from_python_fn(fn=raw_increase)
 
+def raw_neg(a: Atom) -> Atom:
+    assert isinstance(a.value, int)
+    return Atom(-a.value, type="Int")
+
 # All
 inbuilt_functions = {
     "add": add,
