@@ -1,45 +1,36 @@
 # TODO: do not use unittest for functional tests
 
-from lit_script.transformer import ExpressionTransformer
-import unittest
-import os
+import os, sys
 
-from lit_script import Interpreter
-import lit_script.expressions as ex
+sys.path.append('.')
+
+from src import Interpreter
+import src.expressions as ex
+
+
+# Setting environment
+
+for name, fn in ex.inbuilt_functions.items():
+    ex.add_function_to_context(fn, name)
 
 TESTS_LOCATION = "language/tests"
+
 
 # TODO: outsorce heleprs below
 
 def make_atom(value: int):
     return ex.Atom(value=value, type="Int")
 
-def add_int_to_context(name: str, value: int):
+def add_to_context(name: str, value: int):
     atom = make_atom(value=value)
     var = ex.Variable(name=name)
     ex.Expression.context.add_variable(var, ex.AtomExpression(atom=atom))
 
-def increase(a: ex.Atom):
-    x = a.value
-    return ex.Atom(
-        value=x + 100,
-        type="Int"
-    )
 
-def add(a: ex.Atom): # TODO This is a fucnking mess
-
-    def half_add(b: ex.Atom):
-        return ex.Atom(value=b.value + a.value, type="Int")
-
-    half_add = ex.Function.from_python_fn(half_add)
-    
-    return ex.Atom(value=half_add, type="Function")
-
-
-class TestLitScript(unittest.TestCase):
+class TestLitScript:
 
     def test_create_interpreter(self):
-        interpreter = Interpreter()
+        Interpreter()
 
     def test_interpreter_read(self):
         interpreter = Interpreter()
@@ -51,27 +42,17 @@ class TestLitScript(unittest.TestCase):
                 interpreter.read(code)
 
 
-class TestExpressions(unittest.TestCase):
+class TestExpressions:
     
     def test_create_function(self):
-
-        increase_fn = ex.Function.from_python_fn(fn=increase)
+    
+        id_fn = ex.Function.from_python_fn(fn=lambda x: x)
 
         a = make_atom(100)
 
-        self.assertEqual(
-            increase_fn(a),
-            ex.Atom(value=200, type="Int")
-        )
+        assert id_fn(a) == ex.Atom(value=100, type="Int")
 
     def test_call_function_from_context(self):
-
-        increase_fn = ex.Function.from_python_fn(fn=increase)
-
-        ex.Expression.context.add_variable(
-            ex.Variable(name="increase"),
-            ex.AtomExpression(atom=increase_fn)
-        )
         
         a = make_atom(100)
 
@@ -84,8 +65,8 @@ class TestExpressions(unittest.TestCase):
 
         result = e.resolve()
 
-        self.assertIsInstance(result, ex.Atom)
-        self.assertEqual(result.value, 200)
+        assert isinstance(result, ex.Atom)
+        assert result.value == 200
 
     def test_context(self):
         ex.Expression.context.add_variable(
@@ -96,21 +77,10 @@ class TestExpressions(unittest.TestCase):
         e = ex.VariableExpression(variable=ex.Variable(name="maciek"))
         result = e.resolve()
         
-        self.assertIsInstance(result, ex.Atom)
-        self.assertEqual(result.value, 3)
+        assert isinstance(result, ex.Atom)
+        assert result.value == 3
 
     def test_curried_fncs(self):
-        # make the function usable
-        add_fn = ex.Function.from_python_fn(fn=add)
-
-        # Create add atom
-        fn_atom = ex.Atom(value=add_fn, type="Function")
-
-        # Record add
-        ex.Expression.context.add_variable(
-            var=ex.Variable(name="add"),
-            expr=ex.AtomExpression(atom=fn_atom)
-        )
 
         # Inside expression
         add_reference = ex.VariableExpression(variable=ex.Variable(name="add"))
@@ -126,17 +96,6 @@ class TestExpressions(unittest.TestCase):
         e.resolve()
 
     def test_nested_funcs(self):
-        # make the function usable
-        add_fn = ex.Function.from_python_fn(fn=add)
-
-        # Create add atom
-        fn_atom = ex.Atom(value=add_fn, type="Function")
-
-        # Record add
-        ex.Expression.context.add_variable(
-            var=ex.Variable(name="add"),
-            expr=ex.AtomExpression(atom=fn_atom)
-        )
 
         # 1
         add_reference = ex.VariableExpression(variable=ex.Variable(name="add"))
@@ -151,7 +110,7 @@ class TestExpressions(unittest.TestCase):
 
         # 3
         inside_e3 = ex.FunctionCallExpression(fncall=ex.FunctionCall(
-            fun = ex.AtomExpression(atom=fn_atom),
+            fun = ex.VariableExpression(variable=ex.Variable(name="add")),
             arg = e2
         ))
 
@@ -161,6 +120,3 @@ class TestExpressions(unittest.TestCase):
         ))
 
         e3.resolve()
-
-if __name__ == '__main__':
-    unittest.main()
