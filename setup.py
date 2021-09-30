@@ -16,7 +16,7 @@ def read(filename):
 setup(
     name="lit-script",
     version="0.1.0",
-    url="TODO",
+    url="https://github.com/MaciejWas/lit-script",
     license='MIT',
 
     author="Maciej Wasilewski",
