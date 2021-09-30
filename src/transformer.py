@@ -13,7 +13,7 @@ from .expressions import (
     Chain,
 )
 
-AnyExpression = Union[Variable, Atom, FunctionCall, Chain]
+PreExpression = Union[Variable, Atom, FunctionCall, Chain]
 
 
 def create_transformer() -> TransformerChain:
@@ -41,7 +41,7 @@ class TerminalTransformer(Transformer):
 class ExpressionTransformer(Transformer):
     """Every method is of type Variable/Value/Expression -> Expression"""
 
-    def expression(self, xs: list[AnyExpression]):
+    def expression(self, xs: list[PreExpression]):
         assert len(xs) == 1
         x = xs[0]
 

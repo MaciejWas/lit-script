@@ -91,7 +91,7 @@ class Variable:
         return hash(self.name)
 
     def __repr__(self) -> str:
-        return f"<Variable {self.name} :: sadface>"
+        return f"<Variable {self.name}>"
 
 @dataclass
 class FunctionCall:
