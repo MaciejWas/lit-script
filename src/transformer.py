@@ -89,11 +89,12 @@ class TypeTransformer(Transformer):
 
 class FinalTransformer(Transformer):
 
-    def all(self, x):
-        pass
+    def all(self, ls: list[Line]):
+        return ls
 
-    def line(self, x):
-        pass
+    def line(self, ls: list[Line]):
+        assert len(ls) == 1
+        return ls[0]
 
     def variable_defn(self, xs):
         new_variable: Variable = xs[0]
