@@ -125,7 +125,7 @@ class Context:
 
 
 class Expression:
-    context = Context()
+    context: Optional[Context] = None
 
     def __init__(self):
         self.local_context = Context()
@@ -135,6 +135,23 @@ class Expression:
 
     def __repr__(self) -> str:
         raise NotImplementedError()
+
+    @classmethod
+    def set_global_context(cls, new_context: Context):
+        if cls.context is None:
+            cls.context = new_context
+        else:
+            raise Exception("Context can be set only once")
+    
+    @classmethod
+    def add_to_global_context(cls, var: Variable, expr: "Expression"):
+        if cls.context is not None:
+            cls.context.add_variable(
+                var=var,
+                expr=expr
+            )
+        else:
+            raise Exception("No context!")
 
 class AtomExpression(Expression):
     def __init__(self, atom: Atom):

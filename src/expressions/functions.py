@@ -3,7 +3,7 @@ from .expressions import Expression, Function, Atom, Variable, AtomExpression
 # Helper
 
 def add_function_to_context(fn: Function, name: str) -> None:
-    Expression.context.add_variable(
+    Expression.add_to_global_context(
         var=Variable(name=name),
         expr=AtomExpression(
             Atom(value=fn, type="Function")

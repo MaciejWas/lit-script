@@ -8,10 +8,14 @@ import src.expressions as ex
 
 # Setting environment
 
+c = ex.Context()
+ex.Expression.set_global_context(c)
+
 for name, fn in ex.inbuilt_functions.items():
     ex.add_function_to_context(fn, name)
 
 TESTS_LOCATION = "language/tests"
+
 
 # Helpers
 
@@ -21,8 +25,10 @@ def make_atom(value: int):
 def add_to_context(name: str, value: int):
     atom = make_atom(value=value)
     var = ex.Variable(name=name)
-    ex.Expression.context.add_variable(var, ex.AtomExpression(atom=atom))
+    ex.Expression.add_to_global_context(var, ex.AtomExpression(atom=atom))
 
+
+# Tests
 
 class TestLitScript:
 
@@ -66,7 +72,7 @@ class TestExpressions:
         assert result.value == 200
 
     def test_context(self):
-        ex.Expression.context.add_variable(
+        ex.Expression.add_to_global_context(
             ex.Variable(name="maciek"),
             expr=ex.AtomExpression(atom=ex.Atom(value=3, type="Int"))
         )

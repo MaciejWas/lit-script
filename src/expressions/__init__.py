@@ -1,4 +1,5 @@
 from .expressions import (
+    Context,
     Line, Definition, Declaration,
     Expression, Function,
     Atom, Variable, FunctionCall, Chain, 
