@@ -1,13 +1,8 @@
 lit-script
 ==========
 
-.. image:: https://img.shields.io/pypi/v/lit-script.svg
-    :target: https://pypi.python.org/pypi/lit-script
-    :alt: Latest PyPI version
-
-.. image:: False.png
-   :target: False
-   :alt: Latest Travis CI build status
+[![codecov.io](https://codecov.io/github/MaciejWas/lit-script/coverage.svg?branch=main)](https://codecov.io/github/MaciejWas/lit-script)
+               
 
 Compiler for my cool & useless language
 
