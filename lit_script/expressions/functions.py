@@ -1,6 +1,8 @@
 from .expressions import Expression, Function, Atom, Variable, AtomExpression
 
-def add_function_to_context(fn: Function, name: str):
+# Helper
+
+def add_function_to_context(fn: Function, name: str) -> None:
     Expression.context.add_variable(
         var=Variable(name=name),
         expr=AtomExpression(
@@ -8,7 +10,9 @@ def add_function_to_context(fn: Function, name: str):
         )
     )
 
-def raw_add(a: Atom):
+# Functions
+
+def raw_add(a: Atom) -> Atom:
     def raw_half_add(b: Atom) -> Atom:
         return a + b
     half_add = Function.from_python_fn(fn=raw_half_add)
@@ -16,7 +20,8 @@ def raw_add(a: Atom):
     
 add = Function.from_python_fn(fn=raw_add)
 
-def raw_mul(a: Atom):
+
+def raw_mul(a: Atom) -> Atom:
     def raw_half_mul(b: Atom) -> Atom:
         return a + b
     half_mul = Function.from_python_fn(fn=raw_half_mul)
@@ -24,7 +29,16 @@ def raw_mul(a: Atom):
     
 mul = Function.from_python_fn(fn=raw_add)
 
+
+def raw_increase(a: Atom) -> Atom:
+    assert isinstance(a.value, int)
+    return Atom(a.value + 100, type="Int")
+
+increase = Function.from_python_fn(fn=raw_increase)
+
+# All
 inbuilt_functions = {
     "add": add,
-    "mul": mul
+    "mul": mul,
+    "increase": increase
 }

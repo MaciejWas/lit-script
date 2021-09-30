@@ -45,12 +45,14 @@ class Atom:
     def __add__(self, other: "Atom") -> "Atom":
         if self.type == other.type:
             if self.type in ["Int", "Float"]:
-                assert isinstance(self.value, float)
-                assert isinstance(other.value, float)
-                return Atom(value=self.value + other.value, type=self.type) # mypy: 
+                assert isinstance(self.value, float) or isinstance(self.value, int)
+                assert isinstance(other.value, float) or isinstance(other.value, int)
+                
+                return Atom(value=self.value + other.value, type=self.type) # mypy:
+            else:
+                raise NotImplementedError("Cant add that m8.")
         else:
             raise NotImplementedError("Cant add that m8.")
-
 
     def __eq__(self, other: Any):
         if isinstance(other, Atom):
@@ -82,7 +84,10 @@ class Context:
         self.variables[var] = expr
     
     def lookup_variable(self, var: Variable) -> "Expression":
-        return self.variables[var]
+        try:
+            return self.variables[var]
+        except KeyError:
+            raise KeyError(f"No such variable: {var}")
 
 
 # ------------------------------
