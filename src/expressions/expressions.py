@@ -62,26 +62,26 @@ class Atom:
     def __call__(self, *args, **kwargs):
         if not isinstance(self.value, Function):
             raise Exception(f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}")
-        else:
-            return self.value(*args, **kwargs)
+        
+        return self.value(*args, **kwargs)
 
     def __add__(self, other: "Atom") -> "Atom":
-        if self.type == other.type:
-            if self.type in ["Int", "Float"]:
-                assert isinstance(self.value, float) or isinstance(self.value, int)
-                assert isinstance(other.value, float) or isinstance(other.value, int)
-                
-                return Atom(value=self.value + other.value, type=self.type) # mypy:
-            else:
-                raise NotImplementedError("Cant add that m8.")
+        if self.type != other.type:
+            return False
+
+        elif self.type in ["Int", "Float"]:
+            assert isinstance(self.value, (float, int))
+            assert isinstance(other.value, (float, int))
+            return Atom(value=self.value + other.value, type=self.type)
+        
         else:
             raise NotImplementedError("Cant add that m8.")
 
     def __eq__(self, other: Any):
-        if isinstance(other, Atom):
-            return self.value == other.value # TODO: Types
-        else:
-            return False
+        if not isinstance(other, Atom):
+            return False 
+        
+        return self.value == other.value # TODO: Types
 
 @dataclass
 class Variable:

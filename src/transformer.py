@@ -127,4 +127,3 @@ class FinalTransformer(Transformer):
             var=new_variable,
             type=type.name
         )
-
