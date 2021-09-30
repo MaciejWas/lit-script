@@ -9,6 +9,7 @@ import lit_script.expressions as ex
 
 TESTS_LOCATION = "language/tests"
 
+# TODO: outsorce heleprs below
 
 def make_atom(value: int):
     return ex.Atom(value=value, type="Int")
@@ -54,7 +55,7 @@ class TestExpressions(unittest.TestCase):
     
     def test_create_function(self):
 
-        increase_fn = ex.Function.from_python_fn(func=increase)
+        increase_fn = ex.Function.from_python_fn(fn=increase)
 
         a = make_atom(100)
 
@@ -65,7 +66,7 @@ class TestExpressions(unittest.TestCase):
 
     def test_call_function_from_context(self):
 
-        increase_fn = ex.Function.from_python_fn(func=increase)
+        increase_fn = ex.Function.from_python_fn(fn=increase)
 
         ex.Expression.context.add_variable(
             ex.Variable(name="increase"),
@@ -100,7 +101,7 @@ class TestExpressions(unittest.TestCase):
 
     def test_curried_fncs(self):
         # make the function usable
-        add_fn = ex.Function.from_python_fn(func=add)
+        add_fn = ex.Function.from_python_fn(fn=add)
 
         # Create add atom
         fn_atom = ex.Atom(value=add_fn, type="Function")
@@ -126,7 +127,7 @@ class TestExpressions(unittest.TestCase):
 
     def test_nested_funcs(self):
         # make the function usable
-        add_fn = ex.Function.from_python_fn(func=add)
+        add_fn = ex.Function.from_python_fn(fn=add)
 
         # Create add atom
         fn_atom = ex.Atom(value=add_fn, type="Function")
