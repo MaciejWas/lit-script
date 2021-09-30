@@ -1,6 +1,23 @@
 from typing import Optional, Any, Callable, Protocol, runtime_checkable, Union
 from dataclasses import dataclass
 
+# ------------------------------
+#     PARSING
+# ------------------------------
+
+class Line:
+    pass
+
+@dataclass
+class Definition(Line):
+    is_function: bool
+    var: "Variable"
+    expr: "Expression"
+
+@dataclass
+class Declaration(Line):
+    var: "Variable"
+    type: str # TODO: Fucging types
 
 class Function:
     def __init__(
@@ -27,6 +44,9 @@ class Function:
         else:
             raise NotImplementedError()
 
+    def __repr__(self) -> str:
+        return f"<Function :: sadface>"
+
 @dataclass
 class Atom:
     value: Union[int, float, str, Function]
@@ -35,6 +55,9 @@ class Atom:
     @property
     def is_function(self):
         return isinstance(self.value, Function)
+
+    def __repr__(self) -> str:
+        return f"<Atom {self.value} :: {self.type}>"
 
     def __call__(self, *args, **kwargs):
         if not isinstance(self.value, Function):
@@ -67,10 +90,16 @@ class Variable:
     def __hash__(self):
         return hash(self.name)
 
+    def __repr__(self) -> str:
+        return f"<Variable {self.name} :: sadface>"
+
 @dataclass
 class FunctionCall:
     fun: "Expression"
     arg: "Expression"
+
+    def __repr__(self):
+        return f"<Application of {self.fun} on {self.arg}"
 
 class Chain:
     def __init__(self, exprs: list["Expression"]):
@@ -104,14 +133,8 @@ class Expression:
     def resolve(self) -> Atom:
         raise NotImplementedError()
 
-    def add_to_local_context(self, var: Variable, expr: "Expression"):
+    def __repr__(self) -> str:
         raise NotImplementedError()
-
-        self.local_context.add_variable(var, expr)
-
-    def destroy_local_context(self):
-        self.local_context = Context()
-
 
 class AtomExpression(Expression):
     def __init__(self, atom: Atom):
@@ -119,6 +142,9 @@ class AtomExpression(Expression):
     
     def resolve(self) -> Atom:
         return self.atom
+
+    def __repr__(self) -> str:
+        return self.atom.__repr__()
 
 
 class VariableExpression(Expression):
@@ -128,6 +154,9 @@ class VariableExpression(Expression):
     def resolve(self) -> Atom:
         behind_variable: Expression = self.context.lookup_variable(self.variable)
         return behind_variable.resolve()
+
+    def __repr__(self) -> str:
+        return self.variable.__repr__()
 
 
 class FunctionCallExpression(Expression):
@@ -139,6 +168,9 @@ class FunctionCallExpression(Expression):
         actual_arg: Atom = self.fncall.arg.resolve()
 
         return actual_function(actual_arg)
+
+    def __repr__(self) -> str:
+        return self.fncall.__repr__()
 
 class ChainExpression(Expression):
     pass # TODO: IMPL

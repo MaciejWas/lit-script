@@ -4,8 +4,14 @@ from lark.visitors import TransformerChain
 from dataclasses import dataclass
 from typing import Optional, Any, Union
 
-from .expressions import FunctionCallExpression, Atom, AtomExpression, Variable, FunctionCall, Chain, Expression, VariableExpression
-
+from .expressions import (
+    Line, Definition, Declaration,
+    Expression,
+    Atom, AtomExpression,
+    Variable, VariableExpression,
+    FunctionCallExpression, FunctionCall,
+    Chain,
+)
 
 AnyExpression = Union[Variable, Atom, FunctionCall, Chain]
 
@@ -14,6 +20,7 @@ def create_transformer() -> TransformerChain:
     return (
         TerminalTransformer() *
         ExpressionTransformer() *
+        TypeTransformer() *
         FinalTransformer()
     )
 
@@ -50,8 +57,9 @@ class ExpressionTransformer(Transformer):
         else:
             raise NotImplementedError(f"Intermediate expression {type(x)} not implemented")
 
-    def new_variable(self, var: Variable):
-        return var
+    def new_variable(self, vars: list[Variable]):
+        assert len(vars) == 1
+        return vars[0]
 
     def variable(self, vars: list[Variable]):
         assert len(vars) == 1
@@ -72,6 +80,13 @@ class ExpressionTransformer(Transformer):
         return expr
 
 
+class TypeTransformer(Transformer):
+
+    def type(self, vars: list[Variable]) -> Variable:
+        assert len(vars) == 1
+        return vars[0]
+
+
 class FinalTransformer(Transformer):
 
     def all(self, x):
@@ -80,8 +95,33 @@ class FinalTransformer(Transformer):
     def line(self, x):
         pass
 
-    def definition(self, x):
-        pass
+    def variable_defn(self, xs):
+        new_variable: Variable = xs[0]
+        expr: Expression = xs[1]
+        return Definition(
+            is_function=False,
+            var=new_variable,
+            expr=expr
+        )
 
-    def declaration(self, x):
-        pass
+    def function_defn(self, xs):
+        new_variable: Variable = xs[0]
+        expr: Expression = xs[1]
+        return Definition(
+            is_function=True,
+            var=new_variable,
+            expr=expr
+        )
+
+    def definition(self, defns: list[Definition]) -> Definition:
+        assert len(defns) == 1
+        return defns[0]
+
+    def declaration(self, xs):
+        new_variable: Variable = xs[0]
+        type: Variable = xs[1]
+        return Declaration(
+            var=new_variable,
+            type=type.name
+        )
+
