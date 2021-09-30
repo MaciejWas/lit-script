@@ -1,4 +1,4 @@
-from lit_script import Interpreter
+from src import Interpreter
 
 interpreter = Interpreter()
 
