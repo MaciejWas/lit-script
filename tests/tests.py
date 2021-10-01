@@ -43,6 +43,7 @@ class TestLitScript:
 
         for file in os.listdir(TESTS_LOCATION):
             test_file_path = os.path.join(TESTS_LOCATION, file)
+
             with open(test_file_path, "r") as f:
                 code = f.read()
                 interpreter.read(code)
