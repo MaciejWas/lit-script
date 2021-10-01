@@ -17,7 +17,7 @@ def raw_add(a: Atom) -> Atom:
         return a + b
 
     half_add = Function.from_python_fn(fn=raw_half_add)
-    return half_add
+    return Atom(value=half_add, type="Function")
 
 
 add = Function.from_python_fn(fn=raw_add)
@@ -28,7 +28,7 @@ def raw_mul(a: Atom) -> Atom:
         return a + b
 
     half_mul = Function.from_python_fn(fn=raw_half_mul)
-    return half_mul
+    return Atom(value=half_mul, type="Function")
 
 
 mul = Function.from_python_fn(fn=raw_add)
