@@ -35,11 +35,11 @@ class Function:
         self.python_fn = python_fn
 
     @classmethod
-    def from_python_fn(cls, fn: Callable[["Atom"], "Atom"]):
+    def from_python_fn(cls, fn: Callable[["Atom"], "Atom"]) -> "Function":
         return cls(python_fn=fn)
 
     @classmethod
-    def from_expression(cls, expr: "Expression", arg: "Variable"):
+    def from_expression(cls, expr: "Expression", arg: "Variable") -> "Function":
         return cls(argument=arg, expression=expr)
 
     def __call__(self, a: "Atom") -> "Atom":
@@ -58,13 +58,13 @@ class Atom:
     type: str
 
     @property
-    def is_function(self):
+    def is_function(self) -> bool:
         return isinstance(self.value, Function)
 
     def __repr__(self) -> str:
         return f"<Atom {self.value} :: {self.type}>"
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, *args, **kwargs) -> "Atom":
         if not isinstance(self.value, Function):
             raise Exception(
                 f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}"
@@ -84,7 +84,7 @@ class Atom:
         else:
             raise NotImplementedError("Cant add that m8.")
 
-    def __eq__(self, other: Any):
+    def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Atom):
             return False
 
@@ -95,7 +95,7 @@ class Atom:
 class Variable:
     name: str
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.name)
 
     def __repr__(self) -> str:
@@ -107,7 +107,7 @@ class FunctionCall:
     fun: "Expression"
     arg: "Expression"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Application of {self.fun} on {self.arg}"
 
 
@@ -149,17 +149,18 @@ class Expression:
 
     @classmethod
     def set_global_context(cls, new_context: Context):
-        if cls.context is None:
-            cls.context = new_context
-        else:
+        if cls.context is not None:
             raise Exception("Context can be set only once")
 
+        cls.context = new_context
+            
     @classmethod
     def add_to_global_context(cls, var: Variable, expr: "Expression"):
-        if cls.context is not None:
-            cls.context.add_variable(var=var, expr=expr)
-        else:
+        if cls.context is None:
             raise Exception("No context!")
+            
+        cls.context.add_variable(var=var, expr=expr)
+            
 
 
 class AtomExpression(Expression):
