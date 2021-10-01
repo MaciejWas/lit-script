@@ -7,7 +7,7 @@ from .transformer import create_transformer
 class CompileLog:
     def __init__(self):
         self.events = []
-    
+
     def log(self, info: str):
         self.events.append(info)
 

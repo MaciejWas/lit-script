@@ -5,8 +5,10 @@ from dataclasses import dataclass
 #     PARSING
 # ------------------------------
 
+
 class Line:
     pass
+
 
 @dataclass
 class Definition(Line):
@@ -14,17 +16,19 @@ class Definition(Line):
     var: "Variable"
     expr: "Expression"
 
+
 @dataclass
 class Declaration(Line):
     var: "Variable"
-    type: str # TODO: Fucging types
+    type: str  # TODO: Fucging types
+
 
 class Function:
     def __init__(
         self,
         argument: Optional["Variable"] = None,
         expression: Optional["Expression"] = None,
-        python_fn: Optional[Callable[["Atom"], "Atom"]] = None
+        python_fn: Optional[Callable[["Atom"], "Atom"]] = None,
     ):
         self.argument = argument
         self.expression = expression
@@ -37,7 +41,7 @@ class Function:
     @classmethod
     def from_expression(cls, expr: "Expression", arg: "Variable"):
         return cls(argument=arg, expression=expr)
-            
+
     def __call__(self, a: "Atom") -> "Atom":
         if self.python_fn:
             return self.python_fn(a)
@@ -46,6 +50,7 @@ class Function:
 
     def __repr__(self) -> str:
         return f"<Function :: sadface>"
+
 
 @dataclass
 class Atom:
@@ -61,8 +66,10 @@ class Atom:
 
     def __call__(self, *args, **kwargs):
         if not isinstance(self.value, Function):
-            raise Exception(f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}")
-        
+            raise Exception(
+                f"You were trying to call {self.type}, which obviously failed. The atom has value {self.value}"
+            )
+
         return self.value(*args, **kwargs)
 
     def __add__(self, other: "Atom") -> "Atom":
@@ -73,15 +80,16 @@ class Atom:
             assert isinstance(self.value, (float, int))
             assert isinstance(other.value, (float, int))
             return Atom(value=self.value + other.value, type=self.type)
-        
+
         else:
             raise NotImplementedError("Cant add that m8.")
 
     def __eq__(self, other: Any):
         if not isinstance(other, Atom):
-            return False 
-        
-        return self.value == other.value # TODO: Types
+            return False
+
+        return self.value == other.value  # TODO: Types
+
 
 @dataclass
 class Variable:
@@ -93,6 +101,7 @@ class Variable:
     def __repr__(self) -> str:
         return f"<Variable {self.name}>"
 
+
 @dataclass
 class FunctionCall:
     fun: "Expression"
@@ -101,9 +110,11 @@ class FunctionCall:
     def __repr__(self):
         return f"<Application of {self.fun} on {self.arg}"
 
+
 class Chain:
     def __init__(self, exprs: list["Expression"]):
         self.exprs = exprs
+
 
 class Context:
     def __init__(self):
@@ -111,7 +122,7 @@ class Context:
 
     def add_variable(self, var: Variable, expr: "Expression"):
         self.variables[var] = expr
-    
+
     def lookup_variable(self, var: Variable) -> "Expression":
         try:
             return self.variables[var]
@@ -142,21 +153,19 @@ class Expression:
             cls.context = new_context
         else:
             raise Exception("Context can be set only once")
-    
+
     @classmethod
     def add_to_global_context(cls, var: Variable, expr: "Expression"):
         if cls.context is not None:
-            cls.context.add_variable(
-                var=var,
-                expr=expr
-            )
+            cls.context.add_variable(var=var, expr=expr)
         else:
             raise Exception("No context!")
+
 
 class AtomExpression(Expression):
     def __init__(self, atom: Atom):
         self.atom = atom
-    
+
     def resolve(self) -> Atom:
         return self.atom
 
@@ -171,7 +180,7 @@ class VariableExpression(Expression):
     def resolve(self) -> Atom:
         if self.context is None:
             raise Exception("No context - can't resolve.")
-            
+
         behind_variable: Expression = self.context.lookup_variable(self.variable)
         return behind_variable.resolve()
 
@@ -192,5 +201,6 @@ class FunctionCallExpression(Expression):
     def __repr__(self) -> str:
         return self.fncall.__repr__()
 
+
 class ChainExpression(Expression):
-    pass # TODO: IMPL
+    pass  # TODO: IMPL

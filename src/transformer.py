@@ -5,11 +5,16 @@ from dataclasses import dataclass
 from typing import Optional, Any, Union
 
 from .expressions import (
-    Line, Definition, Declaration,
+    Line,
+    Definition,
+    Declaration,
     Expression,
-    Atom, AtomExpression,
-    Variable, VariableExpression,
-    FunctionCallExpression, FunctionCall,
+    Atom,
+    AtomExpression,
+    Variable,
+    VariableExpression,
+    FunctionCallExpression,
+    FunctionCall,
     Chain,
 )
 
@@ -18,10 +23,10 @@ PreExpression = Union[Variable, Atom, FunctionCall, Chain]
 
 def create_transformer() -> TransformerChain:
     return (
-        TerminalTransformer() *
-        ExpressionTransformer() *
-        TypeTransformer() *
-        FinalTransformer()
+        TerminalTransformer()
+        * ExpressionTransformer()
+        * TypeTransformer()
+        * FinalTransformer()
     )
 
 
@@ -30,7 +35,7 @@ class TerminalTransformer(Transformer):
 
     def STRING(self, value: str):
         return Variable(name=value)
-    
+
     def ESPCAPED_STRING(self, value: str):
         return Atom(value=value, type="Str")
 
@@ -50,12 +55,14 @@ class ExpressionTransformer(Transformer):
 
         elif isinstance(x, Variable):
             return VariableExpression(x)
-        
+
         elif isinstance(x, FunctionCall):
             return FunctionCallExpression(x)
 
         else:
-            raise NotImplementedError(f"Intermediate expression {type(x)} not implemented")
+            raise NotImplementedError(
+                f"Intermediate expression {type(x)} not implemented"
+            )
 
     def new_variable(self, vars: list[Variable]):
         assert len(vars) == 1
@@ -83,14 +90,12 @@ class ExpressionTransformer(Transformer):
 
 
 class TypeTransformer(Transformer):
-
     def type(self, vars: list[Variable]) -> Variable:
         assert len(vars) == 1
         return vars[0]
 
 
 class FinalTransformer(Transformer):
-
     def all(self, ls: list[Line]):
         return ls
 
@@ -101,20 +106,12 @@ class FinalTransformer(Transformer):
     def variable_defn(self, xs):
         new_variable: Variable = xs[0]
         expr: Expression = xs[1]
-        return Definition(
-            is_function=False,
-            var=new_variable,
-            expr=expr
-        )
+        return Definition(is_function=False, var=new_variable, expr=expr)
 
     def function_defn(self, xs):
         new_variable: Variable = xs[0]
         expr: Expression = xs[-1]
-        return Definition(
-            is_function=True,
-            var=new_variable,
-            expr=expr
-        )
+        return Definition(is_function=True, var=new_variable, expr=expr)
 
     def definition(self, defns: list[Definition]) -> Definition:
         assert len(defns) == 1
@@ -123,7 +120,4 @@ class FinalTransformer(Transformer):
     def declaration(self, xs):
         new_variable: Variable = xs[0]
         type: Variable = xs[1]
-        return Declaration(
-            var=new_variable,
-            type=type.name
-        )
+        return Declaration(var=new_variable, type=type.name)

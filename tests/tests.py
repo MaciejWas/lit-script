@@ -1,6 +1,6 @@
 import os, sys
 
-sys.path.append('.')
+sys.path.append(".")
 
 from src import Interpreter
 import src.expressions as ex
@@ -19,8 +19,10 @@ TESTS_LOCATION = "language/tests"
 
 # Helpers
 
+
 def make_atom(value: int):
     return ex.Atom(value=value, type="Int")
+
 
 def add_to_context(name: str, value: int):
     atom = make_atom(value=value)
@@ -30,8 +32,8 @@ def add_to_context(name: str, value: int):
 
 # Tests
 
-class TestLitScript:
 
+class TestLitScript:
     def test_create_interpreter(self):
         Interpreter()
 
@@ -46,9 +48,8 @@ class TestLitScript:
 
 
 class TestExpressions:
-    
     def test_create_function(self):
-    
+
         id_fn = ex.Function.from_python_fn(fn=lambda x: x)
 
         a = make_atom(100)
@@ -56,13 +57,13 @@ class TestExpressions:
         assert id_fn(a) == ex.Atom(value=100, type="Int")
 
     def test_call_function_from_context(self):
-        
+
         a = make_atom(100)
 
         e = ex.FunctionCallExpression(
             fncall=ex.FunctionCall(
                 fun=ex.VariableExpression(ex.Variable(name="increase")),
-                arg=ex.AtomExpression(a)
+                arg=ex.AtomExpression(a),
             )
         )
 
@@ -74,12 +75,12 @@ class TestExpressions:
     def test_context(self):
         ex.Expression.add_to_global_context(
             ex.Variable(name="maciek"),
-            expr=ex.AtomExpression(atom=ex.Atom(value=3, type="Int"))
+            expr=ex.AtomExpression(atom=ex.Atom(value=3, type="Int")),
         )
 
         e = ex.VariableExpression(variable=ex.Variable(name="maciek"))
         result = e.resolve()
-        
+
         assert isinstance(result, ex.Atom)
         assert result.value == 3
 
@@ -88,13 +89,14 @@ class TestExpressions:
         # Inside expression
         add_reference = ex.VariableExpression(variable=ex.Variable(name="add"))
         argument = ex.AtomExpression(make_atom(100))
-        inside_e = ex.FunctionCallExpression(fncall=ex.FunctionCall(fun=add_reference, arg=argument))
-        
+        inside_e = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(fun=add_reference, arg=argument)
+        )
+
         # Whole expression
-        e = ex.FunctionCallExpression(fncall=ex.FunctionCall(
-            fun = inside_e,
-            arg = ex.AtomExpression(make_atom(200))
-        ))
+        e = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(fun=inside_e, arg=ex.AtomExpression(make_atom(200)))
+        )
 
         e.resolve()
 
@@ -103,23 +105,24 @@ class TestExpressions:
         # 1
         add_reference = ex.VariableExpression(variable=ex.Variable(name="add"))
         argument = ex.AtomExpression(atom=make_atom(100))
-        e1 = ex.FunctionCallExpression(fncall=ex.FunctionCall(fun=add_reference, arg=argument))
-        
+        e1 = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(fun=add_reference, arg=argument)
+        )
+
         # 2
-        e2 = ex.FunctionCallExpression(fncall=ex.FunctionCall(
-            fun = e1,
-            arg = ex.AtomExpression(atom=make_atom(200))
-        ))
+        e2 = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(fun=e1, arg=ex.AtomExpression(atom=make_atom(200)))
+        )
 
         # 3
-        inside_e3 = ex.FunctionCallExpression(fncall=ex.FunctionCall(
-            fun = ex.VariableExpression(variable=ex.Variable(name="add")),
-            arg = e2
-        ))
+        inside_e3 = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(
+                fun=ex.VariableExpression(variable=ex.Variable(name="add")), arg=e2
+            )
+        )
 
-        e3 = ex.FunctionCallExpression(fncall=ex.FunctionCall(
-            fun = inside_e3,
-            arg = ex.AtomExpression(make_atom(300))
-        ))
+        e3 = ex.FunctionCallExpression(
+            fncall=ex.FunctionCall(fun=inside_e3, arg=ex.AtomExpression(make_atom(300)))
+        )
 
         e3.resolve()
