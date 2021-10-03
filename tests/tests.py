@@ -4,7 +4,7 @@ sys.path.append(".")
 
 import pytest
 
-from src import Interpreter
+from src import Interpreter, codecov_test
 import src.expressions as ex
 
 
@@ -36,6 +36,9 @@ def add_to_context(name: str, value: int):
 
 
 class TestLitScript:
+    def test_codecov(self):
+        codecov_test()
+
     def test_create_interpreter(self):
         Interpreter()
 
