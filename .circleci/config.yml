@@ -17,8 +17,8 @@ jobs:
     docker:
       - image: python:3.9
     steps:
-      - codecov/upload:
-          file: "./coverage.xml"
+      - checkout
+      - run: pip install codecov && codecov
 
 workflows:
   myproj:
