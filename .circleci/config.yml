@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.0.2
+
 jobs:
 
   # using tox
@@ -11,9 +14,11 @@ jobs:
         - run: pip install tox && tox
 
   codecov:
+    docker:
+      - image: python:3.9
     steps:
-      - codecov/upload
-      - file: ./coverage.xml
+      - codecov/upload:
+          file: "./coverage.xml"
 
 workflows:
   myproj:
