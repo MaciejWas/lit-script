@@ -1,4 +1,5 @@
 import os, sys
+
 sys.path.append(".")
 
 import pytest
@@ -50,7 +51,6 @@ class TestLitScript:
 
 
 class TestAtoms:
-
     def test_dunders(self):
         a = ex.Atom(value=1, type="Int")
         b = ex.Atom(value="1", type="Str")
@@ -60,8 +60,8 @@ class TestAtoms:
         with pytest.raises(NotImplementedError):
             a + b
 
-class TestExpressions:
 
+class TestExpressions:
     def test_create_function(self):
 
         id_fn = ex.Function.from_python_fn(fn=lambda x: x)

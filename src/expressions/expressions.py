@@ -153,14 +153,13 @@ class Expression:
             raise Exception("Context can be set only once")
 
         cls.context = new_context
-            
+
     @classmethod
     def add_to_global_context(cls, var: Variable, expr: "Expression"):
         if cls.context is None:
             raise Exception("No context!")
-            
+
         cls.context.add_variable(var=var, expr=expr)
-            
 
 
 class AtomExpression(Expression):
