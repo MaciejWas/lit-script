@@ -29,7 +29,7 @@ value : ESCAPED_STRING
 variable : STRING
 
 function_call : function function_arg ["$"]
-function : expression // variable
+function : expression
 function_arg : expression 
 
 declaration : new_variable "::" type
