@@ -89,10 +89,33 @@ class ExpressionTransformer(Transformer):
         return exprs[0]
 
 
+class LitType:
+    pass
+
+
+@dataclass
+class AtomType(LitType):
+    var: Variable
+
+
+@dataclass
+class FunctionType(LitType):
+    from_: LitType
+    to: LitType
+
+
 class TypeTransformer(Transformer):
-    def type(self, vars: list[Variable]) -> Variable:
+    def type(self, types: list[LitType]) -> LitType:
+        assert len(types) == 1
+        return types[0]
+
+    def atom_type(self, vars: list[Variable]):
         assert len(vars) == 1
-        return vars[0]
+        return AtomType(var=vars[0])
+
+    def function_type(self, types: list[LitType]):
+        assert len(types) == 2
+        return FunctionType(from_=types[0], to=types[1])
 
 
 class FinalTransformer(Transformer):
@@ -119,5 +142,5 @@ class FinalTransformer(Transformer):
 
     def declaration(self, xs):
         new_variable: Variable = xs[0]
-        type: Variable = xs[1]
-        return Declaration(var=new_variable, type=type.name)
+        type: LitType = xs[1]
+        return Declaration(var=new_variable, type=type)

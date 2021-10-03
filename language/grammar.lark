@@ -33,6 +33,10 @@ function : expression // variable
 function_arg : expression 
 
 declaration : new_variable "::" type
-type : variable
+type : atom_type
+     | function_type
+
+function_type : "{" type "->" type "}"
+atom_type : variable 
 
 chain : "{" expression ( "->" expression )+ "}"
