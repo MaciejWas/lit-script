@@ -15,7 +15,7 @@ jobs:
       - image: python:3.9
     steps:
       - checkout
-      - run: pip install codecov coverage pytest lark mypy && coverage run tests/tests.py && codecov
+      - run: pip install codecov coverage pytest lark mypy && coverage run -m pytest tests/tests.py && codecov
 
 workflows:
   myproj:
