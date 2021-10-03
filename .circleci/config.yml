@@ -4,17 +4,19 @@ jobs:
 
   # using tox
   toxify:
-
       docker:
         - image: python:3.9
-
       steps:
-
         - checkout
-
         - run: pip install tox && tox
+
+  codecov:
+    steps:
+      - codecov/upload
+      - file: ./coverage.xml
 
 workflows:
   myproj:
     jobs:
       - toxify
+      - codecov
