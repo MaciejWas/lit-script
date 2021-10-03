@@ -1,5 +1,6 @@
 *.py[cod]
-
+.coverage
+coverage.xml
 # C extensions
 *.so
 

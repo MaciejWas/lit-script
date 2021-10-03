@@ -15,7 +15,7 @@ jobs:
       - image: python:3.9
     steps:
       - checkout
-      - run: pip install codecov && codecov
+      - run: pip install codecov coverage && coverage run tests/tests.py && codecov
 
 workflows:
   myproj:
