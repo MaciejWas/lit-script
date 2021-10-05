@@ -4,7 +4,7 @@ sys.path.append(".")
 
 import pytest
 
-from src import Interpreter, codecov_test
+from src import Interpreter
 import src.expressions as ex
 
 
@@ -36,9 +36,6 @@ def add_to_context(name: str, value: int):
 
 
 class TestLitScript:
-    def test_codecov(self):
-        codecov_test()
-
     def test_create_interpreter(self):
         Interpreter()
 
@@ -63,6 +60,64 @@ class TestAtoms:
         with pytest.raises(NotImplementedError):
             a + b
 
+class TestInbuiltFuncs:
+    def test_add(self):
+        a = make_atom(100)
+
+        e = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=ex.VariableExpression(ex.Variable(name="add")),
+            arg=ex.AtomExpression(a),
+        ))
+
+        e2 = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=e,
+            arg=ex.AtomExpression(a),
+        ))
+
+        result: ex.Atom = e2.resolve()
+
+        assert result.value == 200
+
+    def test_mul(self):
+        a = make_atom(100)
+
+        e = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=ex.VariableExpression(ex.Variable(name="mul")),
+            arg=ex.AtomExpression(a),
+        ))
+
+        e2 = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=e,
+            arg=ex.AtomExpression(a),
+        ))
+
+        result: ex.Atom = e2.resolve()
+
+        assert result.value == 100 * 100
+
+    def test_incr(self):
+        a = make_atom(100)
+
+        e = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=ex.VariableExpression(ex.Variable(name="increase")),
+            arg=ex.AtomExpression(a),
+        ))
+
+        result: ex.Atom = e.resolve()
+
+        assert result.value == 100 + 100
+
+    def test_neg(self):
+        a = make_atom(100)
+
+        e = ex.FunctionCallExpression(ex.FunctionCall(
+            fun=ex.VariableExpression(ex.Variable(name="neg")),
+            arg=ex.AtomExpression(a),
+        ))
+
+        result: ex.Atom = e.resolve()
+
+        assert result.value == -1 * 100
 
 class TestExpressions:
     def test_create_function(self):

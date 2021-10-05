@@ -24,14 +24,15 @@ add = Function.from_python_fn(fn=raw_add)
 
 
 def raw_mul(a: Atom) -> Atom:
+    print(f"a is {a}")
     def raw_half_mul(b: Atom) -> Atom:
-        return a + b
+        return a * b
 
     half_mul = Function.from_python_fn(fn=raw_half_mul)
     return Atom(value=half_mul, type="Function")
 
 
-mul = Function.from_python_fn(fn=raw_add)
+mul = Function.from_python_fn(fn=raw_mul)
 
 
 def raw_increase(a: Atom) -> Atom:
@@ -47,5 +48,8 @@ def raw_neg(a: Atom) -> Atom:
     return Atom(-a.value, type="Int")
 
 
+neg = Function.from_python_fn(fn=raw_neg)
+
+
 # All
-inbuilt_functions = {"add": add, "mul": mul, "increase": increase}
+inbuilt_functions = {"add": add, "mul": mul, "increase": increase, "neg": neg}

@@ -144,30 +144,3 @@ class FinalTransformer(Transformer):
         new_variable: Variable = xs[0]
         type: LitType = xs[1]
         return Declaration(var=new_variable, type=type)
-
-
-def codecov_test():
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
-    print("t")
