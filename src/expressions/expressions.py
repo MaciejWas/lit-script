@@ -1,4 +1,4 @@
-from typing import Optional, Any, Callable, Protocol, runtime_checkable, Union
+from typing import Optional, Any, Callable, Union
 from dataclasses import dataclass
 
 # ------------------------------
@@ -161,8 +161,10 @@ class Expression:
 
     @classmethod
     def set_global_context(cls, new_context: Context):
-        if cls.context is not None:
-            raise Exception("Context can be set only once")
+        # For testing purposes it's allowed to sed context multiple times
+        #
+        # if cls.context is not None:
+        #    raise Exception("Context can be set only once")
 
         cls.context = new_context
 
@@ -176,6 +178,7 @@ class Expression:
 
 class AtomExpression(Expression):
     def __init__(self, atom: Atom):
+        super().__init__()
         self.atom = atom
 
     def resolve(self) -> Atom:
@@ -187,6 +190,7 @@ class AtomExpression(Expression):
 
 class VariableExpression(Expression):
     def __init__(self, variable: Variable):
+        super().__init__()
         self.variable = variable
 
     def resolve(self) -> Atom:
@@ -202,6 +206,7 @@ class VariableExpression(Expression):
 
 class FunctionCallExpression(Expression):
     def __init__(self, fncall: FunctionCall):
+        super().__init__()
         self.fncall = fncall
 
     def resolve(self) -> Atom:
