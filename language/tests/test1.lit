@@ -7,3 +7,4 @@ y = 5
 x = f y
 
 f z = add x $ z
+f z = x `add` z

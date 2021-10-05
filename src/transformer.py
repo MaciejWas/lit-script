@@ -75,7 +75,7 @@ class ExpressionTransformer(Transformer):
         assert len(vals) == 1
         return vals[0]
 
-    def function_call(self, exprs: list[Expression]):
+    def function_call(self, exprs: list[Expression]) -> FunctionCall:
         fun, arg = exprs
         return FunctionCall(fun, arg)
 
@@ -86,6 +86,25 @@ class ExpressionTransformer(Transformer):
     def function_arg(self, exprs: list[Expression]):
         assert len(exprs) == 1
         return exprs[0]
+
+    def infix_call(self, infix_call: list[Union[Expression, Variable]]) -> FunctionCall:
+        assert isinstance(infix_call[0], Expression)
+        assert isinstance(infix_call[1], Variable)
+        assert isinstance(infix_call[2], Expression)
+
+        infix_fn = VariableExpression(infix_call[1])
+        argument_1 = infix_call[0]
+        argument_2 = infix_call[2]
+
+        partially_applied_fn: Expression = self.expression(
+            [FunctionCall(infix_fn, argument_1)]
+        )
+
+        return FunctionCall(partially_applied_fn, argument_2)
+
+    def infix(self, vars: list[Variable]) -> Variable:
+        assert len(vars) == 1
+        return vars[0]
 
 
 class LitType:

@@ -21,6 +21,7 @@ new_variable : STRING
 expression : value         | "(" value ")"
            | variable      | "(" variable ")"
            | function_call | "(" function_call ")"
+           | infix_call    | "(" infix_call ")"
            | chain         | "(" chain ")"
 
 value : ESCAPED_STRING 
@@ -31,6 +32,9 @@ variable : STRING
 function_call : function function_arg ["$"]
 function : expression
 function_arg : expression 
+
+infix_call : expression "`" infix "`" expression
+infix : variable
 
 declaration : new_variable "::" type
 type : atom_type
