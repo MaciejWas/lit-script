@@ -76,25 +76,25 @@ class Atom:
         if self.type != other.type:
             raise NotImplementedError("Cant add that m8.")
 
-        elif self.type in ["Int", "Float"]:
-            assert isinstance(self.value, (float, int))
-            assert isinstance(other.value, (float, int))
-            return Atom(value=self.value + other.value, type=self.type)
-
-        else:
+        if self.type not in ["Int", "Float"]:
             raise NotImplementedError("Cant add that m8.")
+
+        assert isinstance(self.value, (float, int))
+        assert isinstance(other.value, (float, int))
+
+        return Atom(value=self.value + other.value, type=self.type)
 
     def __mul__(self, other: "Atom") -> "Atom":
         if self.type != other.type:
             raise NotImplementedError("Cant mul that m8.")
 
-        elif self.type in ["Int", "Float"]:
-            assert isinstance(self.value, (float, int))
-            assert isinstance(other.value, (float, int))
-            return Atom(value=self.value * other.value, type=self.type)
-
-        else:
+        if self.type not in ["Int", "Float"]:
             raise NotImplementedError("Cant mul that m8.")
+
+        assert isinstance(self.value, (float, int))
+        assert isinstance(other.value, (float, int))
+
+        return Atom(value=self.value * other.value, type=self.type)
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, Atom):
