@@ -60,19 +60,24 @@ class TestAtoms:
         with pytest.raises(NotImplementedError):
             a + b
 
+
 class TestInbuiltFuncs:
     def test_add(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=ex.VariableExpression(ex.Variable(name="add")),
-            arg=ex.AtomExpression(a),
-        ))
+        e = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=ex.VariableExpression(ex.Variable(name="add")),
+                arg=ex.AtomExpression(a),
+            )
+        )
 
-        e2 = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=e,
-            arg=ex.AtomExpression(a),
-        ))
+        e2 = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=e,
+                arg=ex.AtomExpression(a),
+            )
+        )
 
         result: ex.Atom = e2.resolve()
 
@@ -81,15 +86,19 @@ class TestInbuiltFuncs:
     def test_mul(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=ex.VariableExpression(ex.Variable(name="mul")),
-            arg=ex.AtomExpression(a),
-        ))
+        e = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=ex.VariableExpression(ex.Variable(name="mul")),
+                arg=ex.AtomExpression(a),
+            )
+        )
 
-        e2 = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=e,
-            arg=ex.AtomExpression(a),
-        ))
+        e2 = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=e,
+                arg=ex.AtomExpression(a),
+            )
+        )
 
         result: ex.Atom = e2.resolve()
 
@@ -98,10 +107,12 @@ class TestInbuiltFuncs:
     def test_incr(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=ex.VariableExpression(ex.Variable(name="increase")),
-            arg=ex.AtomExpression(a),
-        ))
+        e = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=ex.VariableExpression(ex.Variable(name="increase")),
+                arg=ex.AtomExpression(a),
+            )
+        )
 
         result: ex.Atom = e.resolve()
 
@@ -110,14 +121,17 @@ class TestInbuiltFuncs:
     def test_neg(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(ex.FunctionCall(
-            fun=ex.VariableExpression(ex.Variable(name="neg")),
-            arg=ex.AtomExpression(a),
-        ))
+        e = ex.FunctionCallExpression(
+            ex.FunctionCall(
+                fun=ex.VariableExpression(ex.Variable(name="neg")),
+                arg=ex.AtomExpression(a),
+            )
+        )
 
         result: ex.Atom = e.resolve()
 
         assert result.value == -1 * 100
+
 
 class TestExpressions:
     def test_create_function(self):
