@@ -21,6 +21,7 @@ class CompileLog:
 
 class Interpreter:
     def __init__(self):
+        self.log = CompileLog()
         self.parser: Lark = self.load_parser()
         self.transformer: TransformerChain = create_transformer()
         self.compiler: Compiler = create_compiler()
@@ -31,6 +32,8 @@ class Interpreter:
         return Lark(grammar, start="all")
 
     def read(self, line: str):
+        self.log.log("Starting Compilation")
+
         tree = self.parser.parse(line)
         print(tree.pretty())
 
@@ -38,3 +41,6 @@ class Interpreter:
         print(program)
 
         self.compiler.compile(program)
+
+        self.log.log("End of Compilation")
+        print(self.log)
