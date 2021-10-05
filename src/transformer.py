@@ -1,8 +1,7 @@
-import dataclasses
 from lark import Transformer
 from lark.visitors import TransformerChain
 from dataclasses import dataclass
-from typing import Optional, Any, Union
+from typing import Union
 
 from .expressions import (
     Line,
