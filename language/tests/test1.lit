@@ -7,4 +7,5 @@ y = 5
 x = f y
 
 f z = add x $ z
-f z = x `add` z
+f z = 100 `mul` (x `add` z)
+x = u `mul` (f z)

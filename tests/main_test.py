@@ -4,8 +4,8 @@ sys.path.append(".")
 
 import pytest
 
-from src import Interpreter
-import src.expressions as ex
+from lit_script import Interpreter
+from lit_script import expressions as ex
 
 
 # Setting environment

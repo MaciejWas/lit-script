@@ -2,7 +2,7 @@ import sys
 
 sys.path.append(".")
 
-import src.expressions as ex
+from lit_script import expressions as ex
 
 
 # Setting environment
