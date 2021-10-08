@@ -13,3 +13,7 @@ x = u `mul` (f z)
 1 decides
     (add 3 $ 343)
     (mul 3 $ 343)
+
+f :: {Int -> Int}
+g :: {{Int -> Int} -> {Int -> Int}}
+h :: {Int -> {Int -> {Int -> Int}}}

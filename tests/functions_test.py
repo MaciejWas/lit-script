@@ -28,6 +28,9 @@ class TestInbuiltFuncs:
     def test_decides(self):
         interpreter = Interpreter()
 
+        a: core.Expression = interpreter.read_expression("decides")
+        assert a.resolve().is_function
+
         a: core.Expression = interpreter.read_expression("1 `decides` 4 8")
         result = a.resolve()
         assert result.value == 4
