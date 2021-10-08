@@ -47,9 +47,7 @@ class TerminalTransformer(Transformer):
 
 
 class ExpressionTransformer(Transformer):
-    """Every method is of type Variable/Value/Expression -> Expression"""
-
-    def expression(self, xs: list[PreExpression]):
+    def expression(self, xs: list[PreExpression]) -> Expression:
         assert len(xs) == 1
         x = xs[0]
 
@@ -67,27 +65,28 @@ class ExpressionTransformer(Transformer):
                 f"Intermediate expression {type(x)} not implemented"
             )
 
-    def new_variable(self, vars: list[Variable]):
+    def new_variable(self, vars: list[Variable]) -> Variable:
         assert len(vars) == 1
         return vars[0]
 
-    def variable(self, vars: list[Variable]):
+    def variable(self, vars: list[Variable]) -> Variable:
         assert len(vars) == 1
         return vars[0]
 
-    def value(self, vals: list[Atom]):
+    def value(self, vals: list[Atom]) -> Atom:
         assert len(vals) == 1
         return vals[0]
 
     def function_call(self, exprs: list[Expression]) -> FunctionCall:
+        assert len(exprs) == 2
         fun, arg = exprs
         return FunctionCall(fun, arg)
 
-    def function(self, exprs: list[Expression]):
+    def function(self, exprs: list[Expression]) -> Expression:
         assert len(exprs) == 1
         return exprs[0]
 
-    def function_arg(self, exprs: list[Expression]):
+    def function_arg(self, exprs: list[Expression]) -> Expression:
         assert len(exprs) == 1
         return exprs[0]
 
