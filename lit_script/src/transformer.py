@@ -43,7 +43,7 @@ class TerminalTransformer(Transformer):
 
     def NUMBER(self, value: str) -> Atom:
         assert isinstance(value, str)
-        return Atom(value=int(value), type="Str")
+        return Atom(value=int(value), type="Int")
 
 
 class ExpressionTransformer(Transformer):
