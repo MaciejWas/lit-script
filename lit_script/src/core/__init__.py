@@ -18,4 +18,4 @@ from .expressions import (
 
 from .functions import inbuilt_functions, add_function_to_context
 
-from .types import LitType, FunctionType, AtomType
+from .types import LitType, FunctionType, BasicType

@@ -1,15 +1,13 @@
 from dataclasses import dataclass
 
-from .expressions import Variable
-
 
 class LitType:
     pass
 
 
 @dataclass
-class AtomType(LitType):
-    var: Variable
+class BasicType(LitType):
+    type: str
 
 
 @dataclass

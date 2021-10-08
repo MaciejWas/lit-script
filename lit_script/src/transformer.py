@@ -1,6 +1,5 @@
 from lark import Transformer
 from lark.visitors import TransformerChain
-from dataclasses import dataclass
 from typing import Union
 
 from .core import (
@@ -9,7 +8,7 @@ from .core import (
     Definition,
     Declaration,
     LitType,
-    AtomType,
+    BasicType,
     FunctionType,
     Expression,
     Atom,
@@ -36,13 +35,13 @@ def create_transformer() -> TransformerChain:
 class TerminalTransformer(Transformer):
     """Transforming lark's terminal characters."""
 
-    def STRING(self, value: str):
+    def STRING(self, value: str) -> Variable:
         return Variable(name=value)
 
-    def ESPCAPED_STRING(self, value: str):
+    def ESPCAPED_STRING(self, value: str) -> Atom:
         return Atom(value=value, type="Str")
 
-    def NUMBER(self, value: str):
+    def NUMBER(self, value: str) -> Atom:
         assert isinstance(value, str)
         return Atom(value=int(value), type="Str")
 
@@ -119,7 +118,7 @@ class TypeTransformer(Transformer):
 
     def atom_type(self, vars: list[Variable]):
         assert len(vars) == 1
-        return AtomType(var=vars[0])
+        return BasicType(type=vars[0].name)
 
     def function_type(self, types: list[LitType]):
         assert len(types) == 2
