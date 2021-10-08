@@ -13,6 +13,9 @@ from .expressions import (
     VariableExpression,
     FunctionCallExpression,
     ChainExpression,
+    ExpressionLine,
 )
 
 from .functions import inbuilt_functions, add_function_to_context
+
+from .types import LitType, FunctionType, AtomType

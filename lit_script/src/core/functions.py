@@ -12,6 +12,24 @@ def add_function_to_context(fn: Function, name: str) -> None:
 # Functions
 
 
+def raw_decides(a: Atom) -> Atom:
+    def raw_inner_decides(b: Atom):
+        if a.value == True:
+            raw_resulting_fn = lambda c: b
+        else:
+            raw_resulting_fn = lambda c: c
+
+        resulting_fn = Function.from_python_fn(raw_resulting_fn)
+
+        return resulting_fn
+
+    inner_decides = Function.from_python_fn(raw_inner_decides)
+    return Atom(value=inner_decides, type="Function")
+
+
+decides = Function.from_python_fn(raw_decides)
+
+
 def raw_add(a: Atom) -> Atom:
     def raw_half_add(b: Atom) -> Atom:
         return a + b
@@ -53,4 +71,10 @@ neg = Function.from_python_fn(fn=raw_neg)
 
 
 # All
-inbuilt_functions = {"add": add, "mul": mul, "increase": increase, "neg": neg}
+inbuilt_functions = {
+    "decides": decides,
+    "add": add,
+    "mul": mul,
+    "increase": increase,
+    "neg": neg,
+}

@@ -3,10 +3,14 @@ from lark.visitors import TransformerChain
 from dataclasses import dataclass
 from typing import Union
 
-from .expressions import (
+from .core import (
     Line,
+    ExpressionLine,
     Definition,
     Declaration,
+    LitType,
+    AtomType,
+    FunctionType,
     Expression,
     Atom,
     AtomExpression,
@@ -39,7 +43,8 @@ class TerminalTransformer(Transformer):
         return Atom(value=value, type="Str")
 
     def NUMBER(self, value: str):
-        return Atom(value=value, type="Str")
+        assert isinstance(value, str)
+        return Atom(value=int(value), type="Str")
 
 
 class ExpressionTransformer(Transformer):
@@ -107,21 +112,6 @@ class ExpressionTransformer(Transformer):
         return vars[0]
 
 
-class LitType:
-    pass
-
-
-@dataclass
-class AtomType(LitType):
-    var: Variable
-
-
-@dataclass
-class FunctionType(LitType):
-    from_: LitType
-    to: LitType
-
-
 class TypeTransformer(Transformer):
     def type(self, types: list[LitType]) -> LitType:
         assert len(types) == 1
@@ -137,11 +127,15 @@ class TypeTransformer(Transformer):
 
 
 class FinalTransformer(Transformer):
-    def all(self, ls: list[Line]):
+    def all(self, ls: list[Line]) -> list[Line]:
         return ls
 
-    def line(self, ls: list[Line]):
+    def line(self, ls: list[Union[Definition, Declaration, Expression]]) -> Line:
         assert len(ls) == 1
+
+        if isinstance(ls[0], Expression):
+            return ExpressionLine(expr=ls[0])
+
         return ls[0]
 
     def variable_defn(self, xs):

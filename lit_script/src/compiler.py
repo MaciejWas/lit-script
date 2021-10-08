@@ -1,4 +1,4 @@
-from .expressions import Line, Context
+from .core import Line, Context
 
 Compilable = list[Line]
 

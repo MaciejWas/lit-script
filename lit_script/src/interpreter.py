@@ -1,6 +1,8 @@
 from lark import Lark
 from lark.visitors import TransformerChain
 
+from .core import ExpressionLine, Expression
+
 from .transformer import create_transformer
 from .compiler import Compilable, Compiler, create_compiler
 
@@ -31,7 +33,7 @@ class Interpreter:
             grammar = f.read()
         return Lark(grammar, start="all")
 
-    def read(self, line: str):
+    def compile(self, line: str):
         self.log.log("Starting Compilation")
 
         tree = self.parser.parse(line)
@@ -44,3 +46,18 @@ class Interpreter:
 
         self.log.log("End of Compilation")
         print(self.log)
+
+    def read_expression(self, line: str) -> Expression:
+        program = self.read(line)
+        assert len(program) == 1
+        assert isinstance(program[0], ExpressionLine)
+        return program[0].expr
+
+    def read(self, line: str):
+        tree = self.parser.parse(line)
+        print(tree.pretty())
+
+        program: Compilable = self.transformer.transform(tree)
+        print(program)
+
+        return program

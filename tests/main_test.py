@@ -5,16 +5,16 @@ sys.path.append(".")
 import pytest
 
 from lit_script import Interpreter
-from lit_script import expressions as ex
+from lit_script import core
 
 
 # Setting environment
 
-c = ex.Context()
-ex.Expression.set_global_context(c)
+c = core.Context()
+core.Expression.set_global_context(c)
 
-for name, fn in ex.inbuilt_functions.items():
-    ex.add_function_to_context(fn, name)
+for name, fn in core.inbuilt_functions.items():
+    core.add_function_to_context(fn, name)
 
 TESTS_LOCATION = "language/tests"
 
@@ -23,13 +23,13 @@ TESTS_LOCATION = "language/tests"
 
 
 def make_atom(value: int):
-    return ex.Atom(value=value, type="Int")
+    return core.Atom(value=value, type="Int")
 
 
 def add_to_context(name: str, value: int):
     atom = make_atom(value=value)
-    var = ex.Variable(name=name)
-    ex.Expression.add_to_global_context(var, ex.AtomExpression(atom=atom))
+    var = core.Variable(name=name)
+    core.Expression.add_to_global_context(var, core.AtomExpression(atom=atom))
 
 
 # Tests
@@ -47,13 +47,13 @@ class TestLitScript:
 
             with open(test_file_path, "r") as f:
                 code = f.read()
-                interpreter.read(code)
+                interpreter.compile(code)
 
 
 class TestAtoms:
     def test_dunders(self):
-        a = ex.Atom(value=1, type="Int")
-        b = ex.Atom(value="1", type="Str")
+        a = core.Atom(value=1, type="Int")
+        b = core.Atom(value="1", type="Str")
 
         assert a != b
 

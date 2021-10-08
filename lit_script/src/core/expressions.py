@@ -23,6 +23,11 @@ class Declaration(Line):
     type: str  # TODO: Fucging types
 
 
+@dataclass
+class ExpressionLine(Line):
+    expr: "Expression"
+
+
 class Function:
     def __init__(
         self,

@@ -2,16 +2,17 @@ import sys
 
 sys.path.append(".")
 
-from lit_script import expressions as ex
+from lit_script import core
+from lit_script import Interpreter
 
 
 # Setting environment
 
-c = ex.Context()
-ex.Expression.set_global_context(c)
+c = core.Context()
+core.Expression.set_global_context(c)
 
-for name, fn in ex.inbuilt_functions.items():
-    ex.add_function_to_context(fn, name)
+for name, fn in core.inbuilt_functions.items():
+    core.add_function_to_context(fn, name)
 
 TESTS_LOCATION = "language/tests"
 
@@ -20,76 +21,87 @@ TESTS_LOCATION = "language/tests"
 
 
 def make_atom(value: int):
-    return ex.Atom(value=value, type="Int")
+    return core.Atom(value=value, type="Int")
 
 
 class TestInbuiltFuncs:
+    def test_decides(self):
+        interpreter = Interpreter()
+
+        a: core.Expression = interpreter.read_expression("1 `decides` 4 8")
+        result = a.resolve()
+        assert result.value == 4
+
+        a: core.Expression = interpreter.read_expression("0 `decides` 4 8")
+        result = a.resolve()
+        assert result.value == 8
+
     def test_add(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(
-            ex.FunctionCall(
-                fun=ex.VariableExpression(ex.Variable(name="add")),
-                arg=ex.AtomExpression(a),
+        e = core.FunctionCallExpression(
+            core.FunctionCall(
+                fun=core.VariableExpression(core.Variable(name="add")),
+                arg=core.AtomExpression(a),
             )
         )
 
-        e2 = ex.FunctionCallExpression(
-            ex.FunctionCall(
+        e2 = core.FunctionCallExpression(
+            core.FunctionCall(
                 fun=e,
-                arg=ex.AtomExpression(a),
+                arg=core.AtomExpression(a),
             )
         )
 
-        result: ex.Atom = e2.resolve()
+        result: core.Atom = e2.resolve()
 
         assert result.value == 200
 
     def test_mul(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(
-            ex.FunctionCall(
-                fun=ex.VariableExpression(ex.Variable(name="mul")),
-                arg=ex.AtomExpression(a),
+        e = core.FunctionCallExpression(
+            core.FunctionCall(
+                fun=core.VariableExpression(core.Variable(name="mul")),
+                arg=core.AtomExpression(a),
             )
         )
 
-        e2 = ex.FunctionCallExpression(
-            ex.FunctionCall(
+        e2 = core.FunctionCallExpression(
+            core.FunctionCall(
                 fun=e,
-                arg=ex.AtomExpression(a),
+                arg=core.AtomExpression(a),
             )
         )
 
-        result: ex.Atom = e2.resolve()
+        result: core.Atom = e2.resolve()
 
         assert result.value == 100 * 100
 
     def test_incr(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(
-            ex.FunctionCall(
-                fun=ex.VariableExpression(ex.Variable(name="increase")),
-                arg=ex.AtomExpression(a),
+        e = core.FunctionCallExpression(
+            core.FunctionCall(
+                fun=core.VariableExpression(core.Variable(name="increase")),
+                arg=core.AtomExpression(a),
             )
         )
 
-        result: ex.Atom = e.resolve()
+        result: core.Atom = e.resolve()
 
         assert result.value == 100 + 100
 
     def test_neg(self):
         a = make_atom(100)
 
-        e = ex.FunctionCallExpression(
-            ex.FunctionCall(
-                fun=ex.VariableExpression(ex.Variable(name="neg")),
-                arg=ex.AtomExpression(a),
+        e = core.FunctionCallExpression(
+            core.FunctionCall(
+                fun=core.VariableExpression(core.Variable(name="neg")),
+                arg=core.AtomExpression(a),
             )
         )
 
-        result: ex.Atom = e.resolve()
+        result: core.Atom = e.resolve()
 
         assert result.value == -1 * 100
