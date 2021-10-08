@@ -9,3 +9,7 @@ x = f y
 f z = add x $ z
 f z = 100 `mul` (x `add` z)
 x = u `mul` (f z)
+
+1 decides
+    (add 3 $ 343)
+    (mul 3 $ 343)
