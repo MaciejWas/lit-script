@@ -1,4 +1,5 @@
 import sys
+import pytest
 
 sys.path.append(".")
 
@@ -39,7 +40,15 @@ class TestInbuiltFuncs:
         result = a.resolve()
         assert result.value == 8
 
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('0 `decides` "444" 8')
+
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('0 `decides` "444" "8"')
+
     def test_add(self):
+        interpreter = Interpreter()
+
         a = make_atom(100)
 
         e = core.FunctionCallExpression(
@@ -60,7 +69,15 @@ class TestInbuiltFuncs:
 
         assert result.value == 200
 
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('add "444" "8"')
+
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('add 1 "8"')
+
     def test_mul(self):
+        interpreter = Interpreter()
+
         a = make_atom(100)
 
         e = core.FunctionCallExpression(
@@ -80,6 +97,12 @@ class TestInbuiltFuncs:
         result: core.Atom = e2.resolve()
 
         assert result.value == 100 * 100
+
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('mul "444" "8"')
+
+        with pytest.raises(Exception):
+            a: core.Expression = interpreter.read_expression('mul 1 "8"')
 
     def test_incr(self):
         a = make_atom(100)
