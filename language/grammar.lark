@@ -24,6 +24,7 @@ expression : value         | "(" value ")"
            | function_call | "(" function_call ")"
            | infix_call    | "(" infix_call ")"
            | chain         | "(" chain ")"
+           | lambda        | "(" lambda ")"
 
 value : ESCAPED_STRING 
       | NUMBER
@@ -45,3 +46,5 @@ function_type : "{" type "->" type "}"
 atom_type : variable 
 
 chain : "{" expression ( "->" expression )+ "}"
+
+lambda : "fun" variable "=>" expression

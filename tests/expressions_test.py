@@ -2,21 +2,12 @@ import sys
 
 sys.path.append(".")
 
-from lit_script import core
+from lit_script import core, Interpreter
 
-
-# Setting environment
-
-c = core.Context()
-core.Expression.set_global_context(c)
-
-for name, fn in core.inbuilt_functions.items():
-    core.add_function_to_context(fn, name)
 
 TESTS_LOCATION = "language/tests"
 
-
-# Helpers
+interpreter = Interpreter()
 
 
 def make_atom(value: int):
@@ -43,22 +34,10 @@ class TestExpressions:
             )
         )
 
-        result = e.resolve()
+        result = interpreter.resolve_expression(e)
 
         assert isinstance(result, core.Atom)
         assert result.value == 200
-
-    def test_context(self):
-        core.Expression.add_to_global_context(
-            core.Variable(name="maciek"),
-            expr=core.AtomExpression(atom=core.Atom(value=3, type="Int")),
-        )
-
-        e = core.VariableExpression(variable=core.Variable(name="maciek"))
-        result = e.resolve()
-
-        assert isinstance(result, core.Atom)
-        assert result.value == 3
 
     def test_curried_fncs(self):
 
@@ -76,7 +55,7 @@ class TestExpressions:
             )
         )
 
-        e.resolve()
+        interpreter.resolve_expression(e)
 
     def test_nested_funcs(self):
 
@@ -107,4 +86,4 @@ class TestExpressions:
             )
         )
 
-        e3.resolve()
+        interpreter.resolve_expression(e3)

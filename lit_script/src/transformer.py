@@ -17,10 +17,9 @@ from .core import (
     VariableExpression,
     FunctionCallExpression,
     FunctionCall,
-    Chain,
 )
 
-PreExpression = Union[Variable, Atom, FunctionCall, Chain]
+PreExpression = Union[Variable, Atom, FunctionCall]
 
 
 def create_transformer() -> TransformerChain:

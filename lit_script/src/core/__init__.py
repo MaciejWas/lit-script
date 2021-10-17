@@ -1,21 +1,16 @@
-from .expressions import (
+from .concrete_expressions import (
     Context,
-    Line,
-    Definition,
-    Declaration,
     Expression,
-    Function,
     Atom,
     Variable,
     FunctionCall,
-    Chain,
     AtomExpression,
     VariableExpression,
     FunctionCallExpression,
     ChainExpression,
-    ExpressionLine,
 )
 
-from .functions import inbuilt_functions, add_function_to_context
-
+from .syntax import Line, Definition, Declaration, ExpressionLine
+from .functions import Function
+from .inbuilt_functions import inbuilt_functions
 from .types import LitType, FunctionType, BasicType

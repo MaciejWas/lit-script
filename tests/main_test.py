@@ -8,28 +8,7 @@ from lit_script import Interpreter
 from lit_script import core
 
 
-# Setting environment
-
-c = core.Context()
-core.Expression.set_global_context(c)
-
-for name, fn in core.inbuilt_functions.items():
-    core.add_function_to_context(fn, name)
-
 TESTS_LOCATION = "language/tests"
-
-
-# Helpers
-
-
-def make_atom(value: int):
-    return core.Atom(value=value, type="Int")
-
-
-def add_to_context(name: str, value: int):
-    atom = make_atom(value=value)
-    var = core.Variable(name=name)
-    core.Expression.add_to_global_context(var, core.AtomExpression(atom=atom))
 
 
 # Tests

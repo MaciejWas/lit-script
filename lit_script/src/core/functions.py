@@ -1,80 +1,32 @@
-from .expressions import Expression, Function, Atom, Variable, AtomExpression
+from typing import Optional, Callable
 
-# Helper
-
-
-def add_function_to_context(fn: Function, name: str) -> None:
-    Expression.add_to_global_context(
-        var=Variable(name=name), expr=AtomExpression(Atom(value=fn, type="Function"))
-    )
+from .basic import Atom, Expression, Variable
 
 
-# Functions
+class Function:
+    def __init__(
+        self,
+        argument: Optional[Variable] = None,
+        expression: Optional[Expression] = None,
+        python_fn: Optional[Callable[[Atom], Atom]] = None,
+    ):
+        self.argument = argument
+        self.expression = expression
+        self.python_fn = python_fn
 
+    @classmethod
+    def from_python_fn(cls, fn: Callable[[Atom], Atom]) -> "Function":
+        return cls(python_fn=fn)
 
-def raw_decides(a: Atom) -> Atom:
-    def raw_inner_decides(b: Atom):
-        if a.value == True:
-            raw_resulting_fn = lambda c: b
+    @classmethod
+    def from_expression(cls, expr: Expression, arg: Variable) -> "Function":
+        return cls(argument=arg, expression=expr)
+
+    def __call__(self, a: Atom) -> Atom:
+        if self.python_fn:
+            return self.python_fn(a)
         else:
-            raw_resulting_fn = lambda c: c
+            raise NotImplementedError()
 
-        resulting_fn = Function.from_python_fn(raw_resulting_fn)
-
-        return resulting_fn
-
-    inner_decides = Function.from_python_fn(raw_inner_decides)
-    return Atom(value=inner_decides, type="Function")
-
-
-decides = Function.from_python_fn(raw_decides)
-
-
-def raw_add(a: Atom) -> Atom:
-    def raw_half_add(b: Atom) -> Atom:
-        return a + b
-
-    half_add = Function.from_python_fn(fn=raw_half_add)
-    return Atom(value=half_add, type="Function")
-
-
-add = Function.from_python_fn(fn=raw_add)
-
-
-def raw_mul(a: Atom) -> Atom:
-    print(f"a is {a}")
-
-    def raw_half_mul(b: Atom) -> Atom:
-        return a * b
-
-    half_mul = Function.from_python_fn(fn=raw_half_mul)
-    return Atom(value=half_mul, type="Function")
-
-
-mul = Function.from_python_fn(fn=raw_mul)
-
-
-def raw_increase(a: Atom) -> Atom:
-    assert isinstance(a.value, int)
-    return Atom(a.value + 100, type="Int")
-
-
-increase = Function.from_python_fn(fn=raw_increase)
-
-
-def raw_neg(a: Atom) -> Atom:
-    assert isinstance(a.value, int)
-    return Atom(-a.value, type="Int")
-
-
-neg = Function.from_python_fn(fn=raw_neg)
-
-
-# All
-inbuilt_functions = {
-    "decides": decides,
-    "add": add,
-    "mul": mul,
-    "increase": increase,
-    "neg": neg,
-}
+    def __repr__(self) -> str:
+        return f"<Function :: sadface>"

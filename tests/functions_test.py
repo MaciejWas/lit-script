@@ -7,18 +7,12 @@ from lit_script import core
 from lit_script import Interpreter
 
 
-# Setting environment
-
-c = core.Context()
-core.Expression.set_global_context(c)
-
-for name, fn in core.inbuilt_functions.items():
-    core.add_function_to_context(fn, name)
-
 TESTS_LOCATION = "language/tests"
 
 
 # Helpers
+
+interpreter = Interpreter()
 
 
 def make_atom(value: int):
@@ -27,17 +21,16 @@ def make_atom(value: int):
 
 class TestInbuiltFuncs:
     def test_decides(self):
-        interpreter = Interpreter()
 
         a: core.Expression = interpreter.read_expression("decides")
-        assert a.resolve().is_function
+        assert interpreter.resolve_expression(a).is_function
 
         a: core.Expression = interpreter.read_expression("1 `decides` 4 8")
-        result = a.resolve()
+        result = interpreter.resolve_expression(a)
         assert result.value == 4
 
         a: core.Expression = interpreter.read_expression("0 `decides` 4 8")
-        result = a.resolve()
+        result = interpreter.resolve_expression(a)
         assert result.value == 8
 
         with pytest.raises(Exception):
@@ -47,7 +40,6 @@ class TestInbuiltFuncs:
             a: core.Expression = interpreter.read_expression('0 `decides` "444" "8"')
 
     def test_add(self):
-        interpreter = Interpreter()
 
         a = make_atom(100)
 
@@ -65,7 +57,7 @@ class TestInbuiltFuncs:
             )
         )
 
-        result: core.Atom = e2.resolve()
+        result: core.Atom = interpreter.resolve_expression(e2)
 
         assert result.value == 200
 
@@ -76,7 +68,6 @@ class TestInbuiltFuncs:
             a: core.Expression = interpreter.read_expression('add 1 "8"')
 
     def test_mul(self):
-        interpreter = Interpreter()
 
         a = make_atom(100)
 
@@ -94,7 +85,7 @@ class TestInbuiltFuncs:
             )
         )
 
-        result: core.Atom = e2.resolve()
+        result: core.Atom = interpreter.resolve_expression(e2)
 
         assert result.value == 100 * 100
 
@@ -114,8 +105,7 @@ class TestInbuiltFuncs:
             )
         )
 
-        result: core.Atom = e.resolve()
-
+        result: core.Atom = interpreter.resolve_expression(e)
         assert result.value == 100 + 100
 
     def test_neg(self):
@@ -128,6 +118,6 @@ class TestInbuiltFuncs:
             )
         )
 
-        result: core.Atom = e.resolve()
+        result: core.Atom = interpreter.resolve_expression(e)
 
         assert result.value == -1 * 100

@@ -4,8 +4,10 @@ interpreter = Interpreter()
 
 while True:
     cmd_input = input("lit-script : ")
+
     if cmd_input.lower() in ["exit", "quit"]:
         exit(0)
+
     elif cmd_input.lower().strip() == "{":
 
         cmd_input = ""
